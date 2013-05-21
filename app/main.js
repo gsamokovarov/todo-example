@@ -1,70 +1,71 @@
-$(document).ready(function(event) {
+var Todo = Backbone.Model.extend({
+  defaults: {
+    completed: false
+  },
 
-  var todoData = [];
+  toggleCompleted: function() {
+    this.set('completed', !this.get('completed'));
+  }
+});
 
-  var constructNewTodoItem = function(text) {
-    return {
-      id: _.uniqueId(),
-      description: text,
-      completed: false
-    };
-  };
+var TodoCollection = Backbone.Collection.extend({
+  model: Todo
+});
 
-  var constructNewTodoHtml = function(todoObject) {
-    var liClass = "";
-    var checked = "";
+var TodoListView = Backbone.View.extend({
+  todoTemplate: _.template([
+    "<li data-id='<%- todo.cid %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>",
+    "  <label>",
+    "    <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>",
+    "    <%- todo.get('description') %>",
+    "  </label>",
+    "</li>"
+  ].join('\n')),
 
-    if (todoObject.completed) {
-      liClass = "completedTask";
-      checked = "checked";
-    }
+  events: {
+    'click input[type=checkbox]': 'toggleTodoCompletion',
+    'keyup input[type=text]': 'enterNewTodo'
+  },
 
-    var htmlTemplate = [
-      "<li data-id='<%- todoId %>' class='<%- liClass %>'>",
-      "  <label>",
-      "    <input type='checkbox' <%- checked %> />",
-      "    <%- todoDescription %>",
-      "  </label>",
-      "</li>"
-    ].join("\n");
+  initialize: function() {
+    this.listenTo(this.collection, 'add change', this.render);
+  },
 
-    return _.template(htmlTemplate, {
-      todoDescription: todoObject.description,
-      todoId: todoObject.id,
-      liClass: liClass,
-      checked: checked
-    });
-  };
+  toggleTodoCompletion: function(event) {
+    var todoId = $(event.target).closest('li').data('id');
+    var todo = this.collection.get(todoId);
 
-  var todoInput = $('#todoListToolbar input[type="text"]');
+    if (!todo) throw 'Expected to find a todo with id of ' + todoId;
+    todo.toggleCompleted();
+  },
 
-  var renderTodoItems = function() {
-    $("#todoListBody").empty();
-    _.each(todoData, function(item) {
-      var html = constructNewTodoHtml(item);
-      $("#todoListBody").append(html);
-    });
-  };
+  enterNewTodo: function(event) {
+    var todoInput = $('#todoListToolbar input[type="text"]');
 
-  todoInput.keyup(function(event) {
-    if (event.keyCode === 13) {
-      if (!todoInput.val()) {
-        return false;
-      }
-      var newTodoObject = constructNewTodoItem(todoInput.val());
-      todoData.push(newTodoObject);
-      todoInput.val("");
-      renderTodoItems();
-    }
+    if (event.keyCode !== 13) return false;
+    if (!todoInput.val()) return false;
+
+    var todo = new Todo({description: todoInput.val()});
+    this.collection.add(todo);
+
+    todoInput.val('');
+  },
+
+  render: function() {
+    var todosContainer = $('#todoListBody');
+
+    todosContainer.empty();
+    this.collection.each(function(todo) {
+      var content = this.todoTemplate({todo: todo});
+      todosContainer.append(content);
+    }, this);
+  }
+});
+
+$(function() {
+  window.todoCollection = new TodoCollection();
+  window.todoListView = new TodoListView({
+    collection: todoCollection,
+    el: $('#todoListContainer')
   });
-
-  $(document).on("click", "#todoListBody input[type='checkbox']", function() {
-    var taskId = $(this).closest('li').data("id");
-    var todo = todoData[taskId - 1];
-
-    todo.completed = !todo.completed;
-
-    renderTodoItems();
-  });
-
 });
