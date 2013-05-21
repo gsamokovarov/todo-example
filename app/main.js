@@ -63,7 +63,7 @@ var TodoListView = Backbone.View.extend({
 
     todosContainer.empty();
     this.collection.each(function(todo) {
-      var content = JST.todoTemplate({todo: todo});
+      var content = JST['todo-template']({todo: todo});
       todosContainer.append(content);
     }, this);
   }

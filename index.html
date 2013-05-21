@@ -28,7 +28,7 @@
       </p>
     </section>
 
-    <script id="todoTemplate" type="text/template">
+    <script id="todo-template" type="text/template">
       <li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completed' : '' %>>
         <input class="toggle" type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>
         <label><%- todo.get('description') %></label>
