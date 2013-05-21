@@ -1,0 +1,7 @@
+{
+  "name": "todo-example",
+  "version": "0.0.1",
+  "dependencies": {
+    "bower": "~0.9"
+  }
+}
