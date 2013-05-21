@@ -13,6 +13,7 @@ $(document).ready(function(event) {
   var constructNewTodoHtml = function(todoObject) {
     var liClass = "";
     var checked = "";
+
     if (todoObject.completed) {
       liClass = "completedTask";
       checked = "checked";
@@ -37,7 +38,7 @@ $(document).ready(function(event) {
 
   var todoInput = $('#todoListToolbar input[type="text"]');
 
-  var renderTodoItem = function() {
+  var renderTodoItems = function() {
     $("#todoListBody").empty();
     _.each(todoData, function(item) {
       var html = constructNewTodoHtml(item);
@@ -53,16 +54,17 @@ $(document).ready(function(event) {
       var newTodoObject = constructNewTodoItem(todoInput.val());
       todoData.push(newTodoObject);
       todoInput.val("");
-      renderTodoItem();
+      renderTodoItems();
     }
   });
 
   $(document).on("click", "#todoListBody input[type='checkbox']", function() {
     var taskId = $(this).closest('li').data("id");
-    console.log(taskId);
+    var todo = todoData[taskId - 1];
 
-    todoData[taskId - 1].completed = !todoData[taskId - 1].completed;
-    renderTodoItem();
+    todo.completed = !todo.completed;
+
+    renderTodoItems();
   });
 
 });
