@@ -2,16 +2,13 @@ $(document).ready(function(event) {
 
   var todoData = [];
 
-  var constructNewTodoItem = (function() {
-    var i = 1;
-    return function(text) {
-      return {
-        id : i++,
-        description : text,
-        completed : false
-      };
+  var constructNewTodoItem = function(text) {
+    return {
+      id: _.uniqueId(),
+      description: text,
+      completed: false
     };
-  })();
+  };
 
   var constructNewTodoHtml = function(todoObject) {
     var liClass = "";
