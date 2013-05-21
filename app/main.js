@@ -37,7 +37,7 @@ $(document).ready(function(event) {
 
   var todoInput = $('#todoListToolbar input[type="text"]');
 
-  var render = function() {
+  var renderTodoItem = function() {
     $("#todoListBody").empty();
     _.each(todoData, function(item) {
       var html = constructNewTodoHtml(item);
@@ -53,7 +53,7 @@ $(document).ready(function(event) {
       var newTodoObject = constructNewTodoItem(todoInput.val());
       todoData.push(newTodoObject);
       todoInput.val("");
-      render();
+      renderTodoItem();
     }
   });
 
@@ -62,7 +62,7 @@ $(document).ready(function(event) {
     console.log(taskId);
 
     todoData[taskId - 1].completed = !todoData[taskId - 1].completed;
-    render();
+    renderTodoItem();
   });
 
 });
