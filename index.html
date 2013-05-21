@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple TODO List</title>
+    <meta charset="utf-8">
+    <meta charset="author" content="Genadi Samokovarov, Radoslav Georgiev">
+
+    <title>todos</title>
     <link rel="stylesheet" type="text/css" href="style/main.css">
   </head>
   <body>
-    <div id="todoListContainer">
-      <ul id="todoListBody">
-        <li></li>
-      </ul>
-      <div id="todoListToolbar">
-        <input type="text" placeholder="Enter a new task">
-      </div>
-    </div>
+    <section id="todoapp">
+      <header>
+        <h1>todos</h1>
+        <input id="new-todo" type="text" placeholder="What needs to be done?">
+      </header>
+      <section id="main">
+        <ul id="todo-list"></ul>
+      </section>
+    </section>
+
+    <section id="info">
+      <p>
+        Written by <a href="https://github.com/gsamokovarov">Genadi Samokovarov</a>
+        and <a href="https://github.com/RadoRado">Radoslav Georgiev</a>.
+      </p>
+    </section>
 
     <script id="todoTemplate" type="text/template">
-      <li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>
-        <label>
-          <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>
-          <%- todo.get('description') %>
-          <span class='removeTodo'></span>
-        </label>
+      <li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completed' : '' %>>
+        <input class="toggle" type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>
+        <label><%- todo.get('description') %></label>
+        <button class='destroy'></button>
       </li>
     </script>
 

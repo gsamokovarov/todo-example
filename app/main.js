@@ -15,9 +15,9 @@ var TodoCollection = Backbone.Collection.extend({
 
 var TodoListView = Backbone.View.extend({
   events: {
-    'click input[type=checkbox]': 'toggleTodoCompletion',
-    'keyup input[type=text]': 'enterNewTodo',
-    'click .removeTodo': 'removeTodo'
+    'click .toggle': 'toggleTodoCompletion',
+    'keyup #new-todo': 'enterNewTodo',
+    'click .destroy': 'removeTodo'
   },
 
   initialize: function() {
@@ -33,7 +33,8 @@ var TodoListView = Backbone.View.extend({
   },
 
   enterNewTodo: function(event) {
-    var todoInput = $('#todoListToolbar input[type="text"]');
+    var todoInput = this.$('#new-todo');
+    console.log(todoInput);
 
     if (event.keyCode !== 13) return false;
     if (!todoInput.val()) return false;
@@ -58,7 +59,7 @@ var TodoListView = Backbone.View.extend({
   },
 
   render: function() {
-    var todosContainer = this.$('#todoListBody');
+    var todosContainer = this.$('#todo-list');
 
     todosContainer.empty();
     this.collection.each(function(todo) {
@@ -81,7 +82,7 @@ $(function() {
     .done(function() {
       window.todoListView = new TodoListView({
         collection: window.todoCollection,
-        el: $('#todoListContainer')
+        el: $('#todoapp')
       });
       todoListView.render();
     })
