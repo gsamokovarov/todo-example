@@ -34,13 +34,12 @@ var TodoListView = Backbone.View.extend({
 
   enterNewTodo: function(event) {
     var todoInput = this.$('#new-todo');
-    console.log(todoInput);
 
     if (event.keyCode !== 13) return false;
     if (!todoInput.val()) return false;
 
     var todo = this.collection.create({description: todoInput.val()});
-    if (!todo) throw "Expected new todo creation to succeed";
+    if (!todo) throw 'Expected new todo creation to succeed';
 
     todoInput.val('');
   },
@@ -54,7 +53,7 @@ var TodoListView = Backbone.View.extend({
     if (todo) {
       todo.destroy();
     } else {
-      throw "Expected todo removal to succeed";
+      throw 'Expected todo removal to succeed;;
     }
   },
 
@@ -87,6 +86,6 @@ $(function() {
       todoListView.render();
     })
     .fail(function() {
-      throw "Something went wrong while fetching the todos";
+      throw 'Something went wrong while fetching the todos';
     });
 });
