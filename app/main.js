@@ -14,16 +14,6 @@ var TodoCollection = Backbone.Collection.extend({
 });
 
 var TodoListView = Backbone.View.extend({
-  todoTemplate: _.template([
-    "<li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>",
-    "  <label>",
-    "    <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>",
-    "    <%- todo.get('description') %>",
-    "    <span class='removeTodo'></span>",
-    "  </label>",
-    "</li>"
-  ].join('\n')),
-
   events: {
     'click input[type=checkbox]': 'toggleTodoCompletion',
     'keyup input[type=text]': 'enterNewTodo',
@@ -72,13 +62,18 @@ var TodoListView = Backbone.View.extend({
 
     todosContainer.empty();
     this.collection.each(function(todo) {
-      var content = this.todoTemplate({todo: todo});
+      var content = JST.todoTemplate({todo: todo});
       todosContainer.append(content);
     }, this);
   }
 });
 
 $(function() {
+  window.JST = _.reduce($('script[type="text/template"]'), function(jst, el) {
+    jst[$(el).attr('id')] = _.template($(el).html());
+    return jst;
+  }, {});
+
   window.todoCollection = new TodoCollection();
 
   window.todoCollection

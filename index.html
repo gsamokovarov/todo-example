@@ -14,6 +14,16 @@
       </div>
     </div>
 
+    <script id="todoTemplate" type="text/template">
+      <li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>
+        <label>
+          <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>
+          <%- todo.get('description') %>
+          <span class='removeTodo'></span>
+        </label>
+      </li>
+    </script>
+
     <script type="text/javascript" src="vendor/jquery.js"></script>
     <script type="text/javascript" src="vendor/underscore.js"></script>
     <script type="text/javascript" src="vendor/backbone.js"></script>
