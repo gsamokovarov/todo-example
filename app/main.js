@@ -1,9 +1,4 @@
 $(document).ready(function(event) {
-  // {
-  //  todoId : -1,
-  //  description : "",
-  //  completed : false
-  // }
 
   var todoData = [];
 
@@ -16,7 +11,7 @@ $(document).ready(function(event) {
         completed : false
       };
     };
-  })(); 
+  })();
 
   var constructNewTodoHtml = function(todoObject) {
     var liClass = "";
@@ -26,13 +21,14 @@ $(document).ready(function(event) {
       checked = "checked";
     }
 
-    var htmlTemplate = 
-      "<li class='<%= liClass %>'>" +
-        "<label>" +
-          "<input type='checkbox' <%= checked %> />" +
-          "<span><%= todoId %></span>" +
-        "<%- todoDescription %></label>" + 
-      "</li>";
+    var htmlTemplate = [
+      "<li data-id='<%- todoId %>' class='<%- liClass %>'>",
+      "  <label>",
+      "    <input type='checkbox' <%- checked %> />",
+      "    <%- todoDescription %>",
+      "  </label>",
+      "</li>"
+    ].join("\n");
 
     return _.template(htmlTemplate, {
       todoDescription: todoObject.description,
@@ -46,7 +42,7 @@ $(document).ready(function(event) {
 
   var render = function() {
     $("#todoListBody").empty();
-    _.each(todoData, function(item){
+    _.each(todoData, function(item) {
       var html = constructNewTodoHtml(item);
       $("#todoListBody").append(html);
     });
@@ -65,7 +61,7 @@ $(document).ready(function(event) {
   });
 
   $(document).on("click", "#todoListBody input[type='checkbox']", function() {
-    var taskId = $(this).closest('li').find("span").html();
+    var taskId = $(this).closest('li').data("id");
     console.log(taskId);
 
     todoData[taskId - 1].completed = !todoData[taskId - 1].completed;
