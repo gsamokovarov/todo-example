@@ -33,6 +33,18 @@
   cursor: pointer;
 }
 
+.removeTodo:before {
+  content: "X";
+}
+
+.removeTodo {
+  float: right;
+}
+
+.removeTodo:hover {
+  color: red;
+}
+
 .completedTask {
   text-decoration: line-through;
 }

@@ -19,17 +19,19 @@ var TodoListView = Backbone.View.extend({
     "  <label>",
     "    <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>",
     "    <%- todo.get('description') %>",
+    "    <span class='removeTodo'></span>",
     "  </label>",
     "</li>"
   ].join('\n')),
 
   events: {
     'click input[type=checkbox]': 'toggleTodoCompletion',
-    'keyup input[type=text]': 'enterNewTodo'
+    'keyup input[type=text]': 'enterNewTodo',
+    'click .removeTodo': 'removeTodo'
   },
 
   initialize: function() {
-    this.listenTo(this.collection, 'add change', this.render);
+    this.listenTo(this.collection, 'add change remove', this.render);
   },
 
   toggleTodoCompletion: function(event) {
@@ -50,6 +52,19 @@ var TodoListView = Backbone.View.extend({
     if (!todo) throw "Expected new todo creation to succeed";
 
     todoInput.val('');
+  },
+
+  removeTodo: function(event) {
+    event.stopPropagation();
+
+    var todoId = $(event.target).closest('li').data('id');
+    var todo = this.collection.get(todoId);
+
+    if (todo) {
+      todo.destroy();
+    } else {
+      throw "Expected new todo creation to succeed";
+    }
   },
 
   render: function() {
