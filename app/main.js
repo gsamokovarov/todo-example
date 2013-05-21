@@ -54,7 +54,7 @@ var TodoListView = Backbone.View.extend({
     if (todo) {
       todo.destroy();
     } else {
-      throw "Expected new todo creation to succeed";
+      throw "Expected todo removal to succeed";
     }
   },
 
