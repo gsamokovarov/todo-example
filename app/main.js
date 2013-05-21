@@ -35,8 +35,10 @@ var TodoListView = Backbone.View.extend({
   enterNewTodo: function(event) {
     var todoInput = this.$('#new-todo');
 
-    if (event.keyCode !== 13) return false;
-    if (!todoInput.val()) return false;
+    if (event.keyCode !== 13 || !todoInput.val()) {
+      event.preventDefault();
+      return;
+    }
 
     var todo = this.collection.create({description: todoInput.val()});
     if (!todo) throw 'Expected new todo creation to succeed';
@@ -53,7 +55,7 @@ var TodoListView = Backbone.View.extend({
     if (todo) {
       todo.destroy();
     } else {
-      throw 'Expected todo removal to succeed;;
+      throw 'Expected todo removal to succeed';
     }
   },
 
