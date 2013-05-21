@@ -4,17 +4,18 @@ var Todo = Backbone.Model.extend({
   },
 
   toggleCompleted: function() {
-    this.set('completed', !this.get('completed'));
+    return this.save({completed: !this.get('completed')});
   }
 });
 
 var TodoCollection = Backbone.Collection.extend({
-  model: Todo
+  model: Todo,
+  localStorage: new Backbone.LocalStorage('TodoCollection')
 });
 
 var TodoListView = Backbone.View.extend({
   todoTemplate: _.template([
-    "<li data-id='<%- todo.cid %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>",
+    "<li data-id='<%- todo.id %>' <%- todo.get('completed') ? 'class=completedTask' : '' %>>",
     "  <label>",
     "    <input type='checkbox' <%- todo.get('completed') ? 'checked' : '' %>>",
     "    <%- todo.get('description') %>",
@@ -45,14 +46,14 @@ var TodoListView = Backbone.View.extend({
     if (event.keyCode !== 13) return false;
     if (!todoInput.val()) return false;
 
-    var todo = new Todo({description: todoInput.val()});
-    this.collection.add(todo);
+    var todo = this.collection.create({description: todoInput.val()});
+    if (!todo) throw "Expected new todo creation to succeed";
 
     todoInput.val('');
   },
 
   render: function() {
-    var todosContainer = $('#todoListBody');
+    var todosContainer = this.$('#todoListBody');
 
     todosContainer.empty();
     this.collection.each(function(todo) {
@@ -64,8 +65,17 @@ var TodoListView = Backbone.View.extend({
 
 $(function() {
   window.todoCollection = new TodoCollection();
-  window.todoListView = new TodoListView({
-    collection: todoCollection,
-    el: $('#todoListContainer')
-  });
+
+  window.todoCollection
+    .fetch({update: true})
+    .done(function() {
+      window.todoListView = new TodoListView({
+        collection: window.todoCollection,
+        el: $('#todoListContainer')
+      });
+      todoListView.render();
+    })
+    .fail(function() {
+      throw "Something went wrong while fetching the todos";
+    });
 });
