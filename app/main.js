@@ -10,7 +10,7 @@ var Todo = Backbone.Model.extend({
 
 var TodoCollection = Backbone.Collection.extend({
   model: Todo,
-  localStorage: new Backbone.LocalStorage('TodoCollection')
+  url: '/todo'
 });
 
 var TodoListView = Backbone.View.extend({
