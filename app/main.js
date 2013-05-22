@@ -28,7 +28,7 @@ var TodoListView = Backbone.View.extend({
     var todoId = $(event.target).closest('li').data('id');
     var todo = this.collection.get(todoId);
 
-    if (!todo) throw 'Expected to find a todo with id of ' + todoId;
+    if (!todo) throw 'Could not find a todo with id of ' + todoId;
     todo.toggleCompleted();
   },
 
@@ -41,7 +41,7 @@ var TodoListView = Backbone.View.extend({
     }
 
     var todo = this.collection.create({description: todoInput.val()});
-    if (!todo) throw 'Expected new todo creation to succeed';
+    if (!todo) throw 'Todo creation to failed, please investigate';
 
     todoInput.val('');
   },
@@ -52,11 +52,8 @@ var TodoListView = Backbone.View.extend({
     var todoId = $(event.target).closest('li').data('id');
     var todo = this.collection.get(todoId);
 
-    if (todo) {
-      todo.destroy();
-    } else {
-      throw 'Expected todo removal to succeed';
-    }
+    if (!todo) throw 'Could not find a todo with id of ' + todoId;
+    todo.destroy();
   },
 
   render: function() {
