@@ -82,7 +82,7 @@ $(function() {
         collection: window.todoCollection,
         el: $('#todoapp')
       });
-      todoListView.render();
+      window.todoListView.render();
     })
     .fail(function() {
       throw 'Something went wrong while fetching the todos';
